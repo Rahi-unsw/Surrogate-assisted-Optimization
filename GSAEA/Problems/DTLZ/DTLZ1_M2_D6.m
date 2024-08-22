@@ -1,0 +1,23 @@
+function [f,g] = DTLZ1_M2_D6(x)
+if nargin == 0
+    prob.nf = 2;
+    prob.ng = 0;
+    prob.nx = 3*prob.nf;
+    prob.cast = [];
+    for i = 1:prob.nx
+        prob.bounds(i,:) = [0,1];
+    end
+    f = prob;
+    g = [];
+else
+    [f,g] = DTLZ1_2d_true(x);
+end
+return
+
+function [f,g] = DTLZ1_2d_true(PopDec)
+[N,D]  = size(PopDec);
+M      = 2;
+gg     = (D-M+1+sum((PopDec(:,M:end)-0.5).^2-cos(20.*pi.*(PopDec(:,M:end)-0.5)),2));%100* (Removed in the modified form)
+f      = 0.5*repmat(1+gg,1,M).*fliplr(cumprod([ones(N,1),PopDec(:,1:M-1)],2)).*[ones(N,1),1-PopDec(:,M-1:-1:1)];
+g      = [];
+return
